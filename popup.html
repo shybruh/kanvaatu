@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html {
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #141414;
+    }
+
+    body {
+      width: 320px;
+      padding: 20px;
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background-color: #141414;
+      color: #e8e8e8;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* Header Row with Toggle */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 0;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 svg { fill: #a78bfa; }
+
+    /* TOGGLE SWITCH CSS */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #3a3a3a;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #1a1a1a;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    input:checked + .slider:before { 
+      transform: translateX(20px); 
+      background-color: #ffffff;
+    }
+
+    /* Disabled State UI */
+    body.disabled .form-group { opacity: 0.5; pointer-events: none; }
+    body.disabled .mode-selector { opacity: 0.5; pointer-events: none; }
+    body.disabled h3 svg { fill: #3a3a3a; }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #a0a0a0;
+      margin-bottom: 8px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .form-group { margin-bottom: 20px; transition: opacity 0.3s; }
+
+    /* Display Mode Selector */
+    .mode-selector {
+      margin-bottom: 20px;
+      transition: opacity 0.3s;
+    }
+
+    .mode-options {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mode-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .mode-option input[type="radio"] {
+      opacity: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .mode-option label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 8px;
+      background-color: #1e1e1e;
+      border: 2px solid #2a2a2a;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a0a0a0;
+      text-align: center;
+      margin: 0;
+    }
+
+    .mode-option input[type="radio"]:checked + label {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+      border-color: #a78bfa;
+      color: #c4b5fd;
+    }
+
+    .mode-option label:hover {
+      background-color: #252525;
+      border-color: #3a3a3a;
+    }
+
+    .mode-option input[type="radio"]:checked + label:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+      border-color: #c4b5fd;
+    }
+
+    .mode-icon {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 4px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      color: #e8e8e8;
+      background-color: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    select:hover {
+      border-color: #3a3a3a;
+    }
+
+    select:focus {
+      border-color: #a78bfa;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transition: all 0.2s;
+    }
+    button:hover { 
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    button:disabled { 
+      background: #2a2a2a;
+      color: #606060;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    #status {
+      font-size: 12px;
+      color: #a78bfa;
+      text-align: center;
+      margin-top: 15px;
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #status.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  
+  <div class="header">
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.89 11.1c-1.78-.59-2.64-.96-2.64-1.9 0-1.02.88-1.39 2.75-1.39 1.68 0 3.65.65 4 1.5h2.31c-.39-2.22-2.34-3.41-4.71-3.72V3h-3v2.42c-2.42.23-4.14 1.76-4.14 4.02 0 2.8 2.21 3.78 6.13 4.92 1.95.57 2.45 1.13 2.45 2.11 0 1.25-1.12 1.66-3 1.66-2.31 0-3.95-.97-4.22-2.13H6.5c.32 2.5 2.65 3.8 5.1 4.11V23h3v-2.58c2.45-.16 4.31-1.49 4.31-4.15 0-3.08-2.66-4.04-6.02-5.17z"/></svg>
+      Converter
+    </h3>
+    <label class="switch">
+      <input type="checkbox" id="masterSwitch" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="mode-selector">
+    <label>Display Mode</label>
+    <div class="mode-options">
+      <div class="mode-option">
+        <input type="radio" name="displayMode" id="modeReplace" value="replace" checked>
+        <label for="modeReplace">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11.5 17.5L5 11m0 0v4.5M5 11h4.5m3-4.5L19 13m0 0V8.5m0 4.5h-4.5"/></svg>
+          <span>Replace</span>
+        </label>
+      </div>
+      <div class="mode-option">
+        <input type="radio" name="displayMode" id="modeHover" value="hover">
+        <label for="modeHover">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19.5 5.5h-15a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1H9V18H4.5A2.5 2.5 0 0 1 2 15.5v-9A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v9a2.5 2.5 0 0 1-2.025 2.455a1.75 1.75 0 0 0-.69-1.116l-.339-.339h.554a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1m-8.22 4.72a.75.75 0 0 0-1.28.53v10.5a.75.75 0 0 0 1.368.425l2.467-3.588l4.26.897a.75.75 0 0 0 .685-1.264zm.22 8.615v-6.274l4.436 4.435l-2.281-.48a.75.75 0 0 0-.773.31z"/></svg>
+          <span>Hover</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="fromCurrency">Website Currency (From)</label>
+    <select id="fromCurrency"><option>Loading...</option></select>
+  </div>
+
+  <div class="form-group">
+    <label for="toCurrency">Your Currency (To)</label>
+    <select id="toCurrency"><option>Loading...</option></select>
+  </div>
+
+  <button id="saveBtn">APPLY SETTINGS</button>
+  <div id="status"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
